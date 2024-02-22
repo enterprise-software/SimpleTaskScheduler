@@ -1,11 +1,44 @@
-<form [formGroup]="taskSchedulerForm" (ngSubmit)="createJob()">
-    <div class="form-group">
-      <label for="cronExpressionControl">Cron Expression</label>
-      <input type="text" class="form-control" id="cronExpressionControl" aria-describedby="cronExpressionControl" placeholder="5 */4 12 7 1" formControlName="cronExpressionControl">
+<div class="mb-3">
+  <form [formGroup]="taskSchedulerForm" (ngSubmit)="runJob()">
+    <div class="mb-3">
+      <label for="cronExpressionControl" class="form-label">Cron Expression</label>
+      <input type="text" class="form-control" id="cronExpressionControl" aria-describedby="cronExpressionHelp" placeholder="0 * * ? * *" formControlName="cronExpressionControl">
+      <div id="cronExpressionHelp" class="form-text">Input a valid cron expression (visit https://www.freeformatter.com/cron-expression-generator-quartz.html).</div>
     </div>
-    <div class="form-group">
-      <label for="urlControl">Url</label>
+
+    <div class="mb-3">
+      <label for="urlControl" class="form-label">URL To Scrap</label>
       <input type="text" class="form-control" id="urlControl" placeholder="https://www.google.com/" formControlName="urlControl">
     </div>
-    <button type="submit" class="btn btn-primary" [disabled] = "taskSchedulerForm.invalid" (click)="createJob()">Create Job</button>
+
+    <div class="mb-3">
+      <button type="submit" class="btn btn-primary" [disabled] = "taskSchedulerForm.invalid || getIsCronExecuting()">Create Job</button>
+      <button type="button" class="btn btn-dark" [disabled] = "taskSchedulerForm.invalid || !getIsCronExecuting()" (click)="stopJob()">Stop Job</button>
+    </div>
+    <span *ngIf="showErrorBadRequest()">We won't able to create the job with the data sent.</span>
+    <span *ngIf="!showErrorBadRequest() && getIsCronExecuting()" [ngStyle]="{'background-color': 'orange'}">The job is executing in background.</span>
+    <span *ngIf="errorCallingWebApi && !getIsCronExecuting() && !isCronExecuting" [ngStyle]="{'background-color': 'red'}">The Web Api is not available at this moment, please contact the admin.</span>
   </form>
+</div>
+
+<div class="mb-3" *ngIf="scrapingResult.length > 0">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Url</th>
+        <th scope="col">Cron Expression</th>
+        <th scope="col">Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of scrapingResult">
+        <th scope="row">{{item.id}}</th>
+        <td>{{item.url}}</td>
+        <td>{{item.cronExpression}}</td>
+        <td>{{item.result}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
