@@ -21,7 +21,7 @@
   </form>
 </div>
 
-<div class="mb-3" *ngIf="scrapingResult.length > 0">
+<div class="mb-3" *ngIf="scrapingResult.length > 0 && !getIsCronExecuting() ">
   <table class="table table-striped">
     <thead>
       <tr>

@@ -18,6 +18,7 @@ export class TaskScheduleComponent {
   isBadRequest: boolean = false;
   scrapingResult: DataScraping[] = new Array<DataScraping>;
   errorCallingWebApi: boolean = false;
+  private urlTaskSchedulerWebApi:string = "https://rataskschedulerwebapi20240222172016.azurewebsites.net";
   constructor(private http: HttpClient, private formBuilder: FormBuilder){}
 
   ngOnInit() {      
@@ -36,7 +37,7 @@ export class TaskScheduleComponent {
     const params = new HttpParams()
     .set('cronExpression', cronExpress)
     .set('url', urlToScraping);
-    this.http.post<any>('https://localhost:7246/TaskScheduler', null, { params }).subscribe(result => {
+    this.http.post<any>(`${this.urlTaskSchedulerWebApi}/TaskScheduler`, null, { params }).subscribe(result => {
       this.isCronExecuting = result;
       result ? this.isBadRequest = false: this.isBadRequest = true;
     },
@@ -46,7 +47,7 @@ export class TaskScheduleComponent {
   }
 
   stopJob() {
-    this.http.get<any>('https://localhost:7246/TaskScheduler').subscribe(data => {
+    this.http.get<any>(`${this.urlTaskSchedulerWebApi}/TaskScheduler`).subscribe(data => {
       console.log(data);
       this.isCronExecuting = false;
       this.scrapingResult = data;
