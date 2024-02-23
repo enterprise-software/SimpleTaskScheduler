@@ -19,6 +19,7 @@ export class TaskScheduleComponent {
   scrapingResult: DataScraping[] = new Array<DataScraping>;
   errorCallingWebApi: boolean = false;
   private urlTaskSchedulerWebApi:string = "https://rataskschedulerwebapi20240222172016.azurewebsites.net";
+  //private urlTaskSchedulerWebApi:string = "https://localhost:7246";
   constructor(private http: HttpClient, private formBuilder: FormBuilder){}
 
   ngOnInit() {      
