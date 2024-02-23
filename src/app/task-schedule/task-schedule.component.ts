@@ -49,6 +49,7 @@ export class TaskScheduleComponent {
 
   stopJob() {
     this.http.get<any>(`${this.urlTaskSchedulerWebApi}/TaskScheduler`).subscribe(data => {
+      console.log(data);
       this.isCronExecuting = false;
       this.scrapingResult = data;
     });
